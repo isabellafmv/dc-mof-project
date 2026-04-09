@@ -1,0 +1,6 @@
+project_guidelines/
+*.pdf
+*.md
+*.docx
+settings.json
+*.pkl
