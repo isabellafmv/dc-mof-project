@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project To-Do: Descriptor &amp; Split Impact on CO₂ Prediction in MOFs</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #f4f5f7;
+    color: #1a1a2e;
+    padding: 36px 24px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  h1 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 0.88rem;
+    color: #555;
+    margin-bottom: 28px;
+  }
+
+  .phase {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid #eee;
+  }
+  .phase-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-done   { background: #d4edda; color: #1a5c2a; }
+  .badge-partial{ background: #fff3cd; color: #7a5500; }
+  .badge-todo   { background: #f8d7da; color: #7a1a22; }
+  .badge-other  { background: #e2e3e5; color: #383d41; }
+
+  .phase-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .phase-weeks {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: #888;
+    white-space: nowrap;
+  }
+
+  .items { padding: 6px 0 10px 0; }
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 18px;
+    font-size: 0.90rem;
+    line-height: 1.5;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .item:last-child { border-bottom: none; }
+
+  .check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    margin-top: 1px;
+  }
+  .check-done    { background: #28a745; color: #fff; }
+  .check-partial { background: #ffc107; color: #fff; }
+  .check-todo    { background: #dc3545; color: #fff; }
+  .check-other   { background: #6c757d; color: #fff; }
+
+  .item-text { flex: 1; }
+  .item-text.done { text-decoration: line-through; color: #6c757d; }
+
+  .note {
+    display: inline-block;
+    margin-top: 3px;
+    font-size: 0.78rem;
+    color: #777;
+    font-style: italic;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+    font-size: 0.80rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-done    { background: #28a745; }
+  .dot-partial { background: #ffc107; }
+  .dot-todo    { background: #dc3545; }
+  .dot-other   { background: #6c757d; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Project To-Do — CO₂ Adsorption in MOFs</h1>
+  <p class="subtitle">Alina Popov · Isabella Müller-Vogt · Hannah Ahrens &nbsp;|&nbsp; Last reviewed: May 2026</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-done"></div> Done</div>
+    <div class="legend-item"><div class="legend-dot dot-partial"></div> Partially done</div>
+    <div class="legend-item"><div class="legend-dot dot-todo"></div> Still to do</div>
+    <div class="legend-item"><div class="legend-dot dot-other"></div> Done by other group members</div>
+  </div>
+
+  <!-- ── PHASE 1 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-done">✓ DONE</span>
+      <span class="phase-title">Checkpoint 1 — Download hMOF dataset, compute RAC descriptors, assemble dataframes</span>
+      <span class="phase-weeks">~1 week</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Download hMOF dataset from MOFDB
+          <span class="note">137,953 structures downloaded with checkpointing (dataset-exploration.ipynb)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Clean dataset and perform exploratory data analysis
+          <span class="note">111,469 usable structures after filtering missing CO₂/topology values; distributions, skewness, and class balance analyzed</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Compute RAC chemical descriptors for all structures using mofdscribe
+          <span class="note">480 RAC features computed for all 111,469 structures; saved to rac_features.parquet</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Assemble unified descriptor dataframe (geometric + RAC)
+          <span class="note">Merged dataset with 507 columns; saved to data/merged/</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Correlation analysis and feature selection
+          <span class="note">15 near-zero-variance features dropped; 37 highly correlated features (|r| &gt; 0.95) dropped → final 50-feature set (5 geometric + 45 RAC); saved to data/merged/hmof_decorrelated.parquet and feature_selection.json</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PHASE 2 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-done">✓ DONE</span>
+      <span class="phase-title">Checkpoint 2 — Implement all three split strategies and verify integrity</span>
+      <span class="phase-weeks">~0.5 weeks</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Random split (80/10/10) with topology stratification
+          <span class="note">89,175 train / 11,147 val / 11,147 test; saved to data/splits/</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Topology-stratified split (unseen topologies in val &amp; test)
+          <span class="note">Zero-leakage verified; 8,809 train / 1,048 val / 101,612 test</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Metal-node-stratified split (unseen metal nodes in val &amp; test)
+          <span class="note">Zero-leakage verified; 78,241 train / 3,994 val / 29,234 test</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          Save per-split merged + decorrelated files for all 9 partitions (3 strategies × 3 splits)
+          <span class="note">All split_*_*_merged.parquet files saved to data/splits/</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PHASE 3 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-partial">~ PARTIAL</span>
+      <span class="phase-title">Checkpoint 3 — Train baseline models (geometric descriptors only) across all splits</span>
+      <span class="phase-weeks">~1 week</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          XGBoost baseline models trained (geometric-only feature sets across all 3 splits)
+          <span class="note">Optuna TPE + RandomizedSearch HPO; models saved to models/xgb/</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          RF baseline models trained (geometric-only, all 3 splits)
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          MLP baseline models trained (geometric-only, all 3 splits)
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Evaluate XGBoost baseline models on test sets → report RMSE, MAE, R²
+          <span class="note">Training + CV done; test-set evaluation not yet implemented in xgboost_training.ipynb — run_experiment() only records CV RMSE</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PHASE 4 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-partial">~ PARTIAL</span>
+      <span class="phase-title">Checkpoint 4 — Train models with RAC &amp; combined descriptors; compile full 3×3 performance matrix</span>
+      <span class="phase-weeks">~1.5 weeks</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-done">✓</div>
+        <div class="item-text done">
+          XGBoost trained across all 7 feature sets × 3 splits (21 experiments × 2 HPO methods = 42 models)
+          <span class="note">geo_decorr, geo_all, rac_decorr, rac_all, combined_decorr, combined_all, baseline — all splits; all .joblib files saved</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-partial">~</div>
+        <div class="item-text">
+          XGBoost CV RMSE summary compiled
+          <span class="note">xgb_cv_summary.csv has 16/21 experiments recorded (no method column — likely from an intermediate run); worth re-running the summary cell to ensure all 21 are captured cleanly</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          RF models trained across RAC &amp; combined feature sets, all splits
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          MLP models trained across RAC &amp; combined feature sets, all splits
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Evaluate all XGBoost models on held-out test sets (RMSE, MAE, R²)
+          <span class="note">Need to add a test-set evaluation step to xgboost_training.ipynb — load saved .joblib models, run on test partitions, save metrics</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Compile full 3×3 performance matrix (descriptor type × split strategy) for all three model families
+          <span class="note">Requires test-set metrics from XGBoost + results from group members (RF, MLP)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PHASE 5 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-todo">✗ TODO</span>
+      <span class="phase-title">Checkpoint 5 — SHAP analysis for all descriptor–split–model combinations</span>
+      <span class="phase-weeks">~1.5 weeks</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Run SHAP for XGBoost across all feature-set / split combinations
+          <span class="note">Use shap.TreeExplainer on saved .joblib models; compute mean |SHAP| per feature</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          Run SHAP for RF models
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          Run SHAP for MLP models
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Analyse feature importance patterns across descriptor types, splits, and model families
+          <span class="note">Key question: does the advantage of chemical descriptors persist under non-random splits?</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── PHASE 6 ── -->
+  <div class="phase">
+    <div class="phase-header">
+      <span class="phase-badge badge-todo">✗ TODO</span>
+      <span class="phase-title">Checkpoint 6 — Synthesis, benchmarking &amp; poster</span>
+      <span class="phase-weeks">~1.5 weeks</span>
+    </div>
+    <div class="items">
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Compare results to published benchmarks
+          <span class="note">Achour et al.: CATBoost (depth 4, 300 iter, lr=0.1) → train RMSE 0.07 (R²=0.99), test RMSE 0.43 (R²=0.84)</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Synthesise findings across all experiments
+          <span class="note">Interaction between descriptor type and split strategy; whether geometric vs. chemical advantage changes under different splits</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-todo">✗</div>
+        <div class="item-text">
+          Create poster for poster presentation
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

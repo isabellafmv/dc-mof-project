@@ -7,7 +7,7 @@ import sys, pathlib
 sys.path.insert(0, str(pathlib.Path("..").resolve()))   # from notebooks/
 from src.data_utils import load_experiment
 
-X_train, X_val, X_test, y_train, y_val, y_test = load_experiment(
+X_train, X_test, y_train, y_test = load_experiment(
     split_strategy="random",       # "random" | "topology" | "metal"
     feature_set="combined_decorr", # any of the 7 named sets (see below)
 )
@@ -24,16 +24,19 @@ Feature sets (defined in data/merged/feature_selection.json)
 
 Returns
 -------
-X_*  float64 arrays of shape (n, n_features)  — NOT standardised
-y_*  float64 arrays of shape (n, 5)
-     columns → co2_mol_kg at 0.01 / 0.05 / 0.1 / 0.5 / 2.5 bar
+X_train, X_test : float64 arrays of shape (n, n_features)  — NOT standardised
+y_train, y_test : float64 arrays of shape (n, 5)
+                  columns → co2_mol_kg at 0.01 / 0.05 / 0.1 / 0.5 / 2.5 bar
+
+There is no separate validation set — tune hyperparameters via cross-validation
+on the training set, then evaluate the final model on X_test / y_test.
 
 Standardise inside your model script, not here, because tree models don't
 need it and MLP does.  Example:
 
     from sklearn.preprocessing import StandardScaler
     scaler = StandardScaler().fit(X_train)
-    X_train_s, X_val_s, X_test_s = map(scaler.transform, [X_train, X_val, X_test])
+    X_train_s, X_test_s = scaler.transform(X_train), scaler.transform(X_test)
 
 Baseline encoding
 -----------------
@@ -87,9 +90,9 @@ def load_experiment(
     feature_set: str,
     *,
     encoding: str = "label",
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
-    Load one (split × feature-set) experiment as six numpy arrays.
+    Load one (split × feature-set) experiment as four numpy arrays.
 
     Parameters
     ----------
@@ -100,8 +103,8 @@ def load_experiment(
 
     Returns
     -------
-    X_train, X_val, X_test : float64 (n, n_features)
-    y_train, y_val, y_test : float64 (n, 5)  — all five CO2 pressures
+    X_train, X_test : float64 (n, n_features)
+    y_train, y_test : float64 (n, 5)  — all five CO2 pressures
     """
     if split_strategy not in VALID_SPLITS:
         raise ValueError(
@@ -131,27 +134,27 @@ def load_experiment(
 
     master = pd.read_parquet(_MASTER_PATH, columns=master_cols).set_index("name")
 
-    # Load each partition, preserving split order
+    # Load each partition
     dfs: dict[str, pd.DataFrame] = {}
-    for partition in ("train", "val", "test"):
+    for partition in ("train", "test"):
         split_path = _SPLITS_DIR / f"split_{split_strategy}_{partition}_merged.parquet"
         names = pd.read_parquet(split_path, columns=["name"])["name"]
         dfs[partition] = master.loc[names].reset_index(drop=True)
 
-    df_train, df_val, df_test = dfs["train"], dfs["val"], dfs["test"]
+    df_train, df_test = dfs["train"], dfs["test"]
 
     if is_baseline:
-        df_train, df_val, df_test = encode_categoricals(
-            df_train, df_val, df_test, method=encoding
+        # encode_categoricals always returns a 3-tuple; pass None for the
+        # (removed) val slot and discard it.
+        df_train, _, df_test = encode_categoricals(
+            df_train, None, df_test, method=encoding
         )
         feat_cols = ["topology_encoded", "metal_node_encoded"]
 
     X_train = df_train[feat_cols].to_numpy(dtype=np.float64)
-    X_val   = df_val[feat_cols].to_numpy(dtype=np.float64)
     X_test  = df_test[feat_cols].to_numpy(dtype=np.float64)
 
     y_train = df_train[TARGET_COLS].to_numpy(dtype=np.float64)
-    y_val   = df_val[TARGET_COLS].to_numpy(dtype=np.float64)
     y_test  = df_test[TARGET_COLS].to_numpy(dtype=np.float64)
 
-    return X_train, X_val, X_test, y_train, y_val, y_test
+    return X_train, X_test, y_train, y_test
