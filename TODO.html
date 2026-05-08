@@ -177,7 +177,7 @@
         <div class="check check-done">✓</div>
         <div class="item-text done">
           Correlation analysis and feature selection
-          <span class="note">15 near-zero-variance features dropped; 37 highly correlated features (|r| &gt; 0.95) dropped → final 50-feature set (5 geometric + 45 RAC); saved to data/merged/hmof_decorrelated.parquet and feature_selection.json</span>
+          <span class="note">15 near-zero-variance features dropped; 37 highly correlated features (|r| &gt; 0.95) dropped → final 50-feature decorrelated set (5 geo + 45 RAC); all 7 named feature sets written to feature_selection.json</span>
         </div>
       </div>
 
@@ -196,31 +196,31 @@
       <div class="item">
         <div class="check check-done">✓</div>
         <div class="item-text done">
-          Random split (80/10/10) with topology stratification
-          <span class="note">89,175 train / 11,147 val / 11,147 test; saved to data/splits/</span>
+          Random split (90/10) with topology stratification
+          <span class="note">100,322 train / 11,147 test; no separate val — hyperparameters tuned via 5-fold CV on train</span>
         </div>
       </div>
 
       <div class="item">
         <div class="check check-done">✓</div>
         <div class="item-text done">
-          Topology-stratified split (unseen topologies in val &amp; test)
-          <span class="note">Zero-leakage verified; 8,809 train / 1,048 val / 101,612 test</span>
+          Topology-stratified split (unseen topologies in test; pcu pinned to train)
+          <span class="note">pcu (~90% of data) always in train; remaining 29 topologies split randomly → zero-leakage verified; 111,409 train / 60 test</span>
         </div>
       </div>
 
       <div class="item">
         <div class="check check-done">✓</div>
         <div class="item-text done">
-          Metal-node-stratified split (unseen metal nodes in val &amp; test)
-          <span class="note">Zero-leakage verified; 78,241 train / 3,994 val / 29,234 test</span>
+          Metal-node-stratified split (unseen metal nodes in test)
+          <span class="note">Zero-leakage verified; 82,235 train / 29,234 test</span>
         </div>
       </div>
 
       <div class="item">
         <div class="check check-done">✓</div>
         <div class="item-text done">
-          Save per-split merged + decorrelated files for all 9 partitions (3 strategies × 3 splits)
+          Save per-split merged + decorrelated files for all 6 partitions (3 strategies × train/test)
           <span class="note">All split_*_*_merged.parquet files saved to data/splits/</span>
         </div>
       </div>
@@ -238,34 +238,26 @@
     <div class="items">
 
       <div class="item">
-        <div class="check check-done">✓</div>
-        <div class="item-text done">
-          XGBoost baseline models trained (geometric-only feature sets across all 3 splits)
-          <span class="note">Optuna TPE + RandomizedSearch HPO; models saved to models/xgb/</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-other">—</div>
-        <div class="item-text">
-          RF baseline models trained (geometric-only, all 3 splits)
-          <span class="note">Assigned to other group members</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-other">—</div>
-        <div class="item-text">
-          MLP baseline models trained (geometric-only, all 3 splits)
-          <span class="note">Assigned to other group members</span>
-        </div>
-      </div>
-
-      <div class="item">
         <div class="check check-todo">✗</div>
         <div class="item-text">
-          Evaluate XGBoost baseline models on test sets → report RMSE, MAE, R²
-          <span class="note">Training + CV done; test-set evaluation not yet implemented in xgboost_training.ipynb — run_experiment() only records CV RMSE</span>
+          XGBoost baseline + all feature sets trained across all 3 splits, with test-set evaluation
+          <span class="note">Notebook updated: run_experiment() now records test RMSE / MAE / R² in addition to CV RMSE. Old models (from previous splits) need to be cleared and xgboost_training.ipynb re-run</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          RF models trained and evaluated (geometric-only baseline + all feature sets, all 3 splits)
+          <span class="note">Assigned to other group members</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="check check-other">—</div>
+        <div class="item-text">
+          MLP models trained and evaluated (geometric-only baseline + all feature sets, all 3 splits)
+          <span class="note">Assigned to other group members</span>
         </div>
       </div>
 
@@ -275,57 +267,25 @@
   <!-- ── PHASE 4 ── -->
   <div class="phase">
     <div class="phase-header">
-      <span class="phase-badge badge-partial">~ PARTIAL</span>
-      <span class="phase-title">Checkpoint 4 — Train models with RAC &amp; combined descriptors; compile full 3×3 performance matrix</span>
+      <span class="phase-badge badge-todo">✗ TODO</span>
+      <span class="phase-title">Checkpoint 4 — Compile full 3×3 performance matrix</span>
       <span class="phase-weeks">~1.5 weeks</span>
     </div>
     <div class="items">
 
       <div class="item">
-        <div class="check check-done">✓</div>
-        <div class="item-text done">
-          XGBoost trained across all 7 feature sets × 3 splits (21 experiments × 2 HPO methods = 42 models)
-          <span class="note">geo_decorr, geo_all, rac_decorr, rac_all, combined_decorr, combined_all, baseline — all splits; all .joblib files saved</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-partial">~</div>
+        <div class="check check-todo">✗</div>
         <div class="item-text">
-          XGBoost CV RMSE summary compiled
-          <span class="note">xgb_cv_summary.csv has 16/21 experiments recorded (no method column — likely from an intermediate run); worth re-running the summary cell to ensure all 21 are captured cleanly</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-other">—</div>
-        <div class="item-text">
-          RF models trained across RAC &amp; combined feature sets, all splits
-          <span class="note">Assigned to other group members</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-other">—</div>
-        <div class="item-text">
-          MLP models trained across RAC &amp; combined feature sets, all splits
-          <span class="note">Assigned to other group members</span>
+          Compile full performance matrix (descriptor type × split strategy) for XGBoost once training run completes
+          <span class="note">Results go into results/xgb/xgb_summary.csv; pivot tables for CV RMSE, test RMSE, and test R² are already set up in the notebook</span>
         </div>
       </div>
 
       <div class="item">
         <div class="check check-todo">✗</div>
         <div class="item-text">
-          Evaluate all XGBoost models on held-out test sets (RMSE, MAE, R²)
-          <span class="note">Need to add a test-set evaluation step to xgboost_training.ipynb — load saved .joblib models, run on test partitions, save metrics</span>
-        </div>
-      </div>
-
-      <div class="item">
-        <div class="check check-todo">✗</div>
-        <div class="item-text">
-          Compile full 3×3 performance matrix (descriptor type × split strategy) for all three model families
-          <span class="note">Requires test-set metrics from XGBoost + results from group members (RF, MLP)</span>
+          Merge XGBoost results with RF and MLP results into a single 3×3 comparison table
+          <span class="note">Requires results from other group members</span>
         </div>
       </div>
 
