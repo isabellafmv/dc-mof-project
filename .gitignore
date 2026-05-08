@@ -4,3 +4,4 @@ project_guidelines/
 *.docx
 settings.json
 *.pkl
+*.html
