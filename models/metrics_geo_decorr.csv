@@ -1,0 +1,7 @@
+strategy,split,feature_set,r2,rmse,n_estimators,min_samples_split,min_samples_leaf,max_features,max_depth
+random,val,geo_decorr,0.6361,0.7277,500,10,2,log2,20.0
+random,test,geo_decorr,0.6375,0.7309,500,10,2,log2,20.0
+topology,val,geo_decorr,0.1845,0.5628,300,5,4,sqrt,
+topology,test,geo_decorr,0.2445,1.137,300,5,4,sqrt,
+metal,val,geo_decorr,0.6607,0.8257,500,10,2,log2,20.0
+metal,test,geo_decorr,0.6521,0.7772,500,10,2,log2,20.0
