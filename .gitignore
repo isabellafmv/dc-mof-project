@@ -5,5 +5,4 @@ project_guidelines/
 settings.json
 *.pkl
 *.html
-models/rf/
 *.joblib
