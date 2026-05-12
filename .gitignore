@@ -6,3 +6,4 @@ settings.json
 *.pkl
 *.html
 *.joblib
+.conda/
