@@ -5,3 +5,5 @@ project_guidelines/
 settings.json
 *.pkl
 *.html
+*.joblib
+.conda/
