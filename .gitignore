@@ -5,3 +5,6 @@ project_guidelines/
 settings.json
 *.pkl
 *.DS_Store
+*.html
+*.joblib
+.conda/
