@@ -4,6 +4,7 @@ project_guidelines/
 *.docx
 settings.json
 *.pkl
+*.DS_Store
 *.html
 *.joblib
 .conda/
