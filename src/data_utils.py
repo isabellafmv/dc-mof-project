@@ -125,6 +125,7 @@ def load_experiment(
 
     master = pd.read_parquet(_MASTER_PATH, columns=master_cols).set_index("name")
 
+    # Load each partition
     dfs: dict[str, pd.DataFrame] = {}
     for partition in ("train", "test"):
         split_path = _SPLITS_DIR / f"split_{split_strategy}_{partition}_merged.parquet"
@@ -134,6 +135,8 @@ def load_experiment(
     df_train, df_test = dfs["train"], dfs["test"]
 
     if is_baseline:
+        # encode_categoricals always returns a 3-tuple; pass None for the
+        # (removed) val slot and discard it.
         df_train, _, df_test = encode_categoricals(
             df_train, None, df_test, method=encoding
         )
