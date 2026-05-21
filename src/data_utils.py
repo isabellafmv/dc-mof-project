@@ -59,15 +59,9 @@ from src.encoding import encode_categoricals
 
 # ── paths ─────────────────────────────────────────────────────────────────────
 
-# Resolve project root as two levels up from this file (src/data_utils.py)
-_ROOT = Path(__file__).resolve().parent.parent
-_SPLITS_DIR = _ROOT / "data" / "splits"
+_ROOT        = Path(__file__).resolve().parent.parent
+_SPLITS_DIR  = _ROOT / "data" / "splits"
 _CONFIG_PATH = _ROOT / "data" / "merged" / "feature_selection.json"
-
-# hmof_merged.parquet holds ALL features (102) + metadata + targets.
-# The split_*_merged.parquet files only carry the 50 decorrelated features,
-# so we use them only for their name lists and always pull feature values
-# from the master file.  This way geo_all / rac_all / combined_all work too.
 _MASTER_PATH = _ROOT / "data" / "merged" / "hmof_merged.parquet"
 
 # ── constants ─────────────────────────────────────────────────────────────────
@@ -122,11 +116,8 @@ def load_experiment(
         )
 
     is_baseline = feature_set == "baseline"
-    feat_cols = feature_sets[feature_set]
+    feat_cols   = feature_sets[feature_set]
 
-    # Columns to load from the master parquet.
-    # Baseline: need the raw categorical strings for encoding, not the
-    # encoded names (those don't exist in the file yet).
     if is_baseline:
         master_cols = ["name", "topology", "metal_node"] + TARGET_COLS
     else:
