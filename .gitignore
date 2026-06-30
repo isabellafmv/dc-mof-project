@@ -8,3 +8,5 @@ settings.json
 *.html
 *.joblib
 .conda/
+__pycache__/
+*.pyc

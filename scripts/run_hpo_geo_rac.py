@@ -31,7 +31,7 @@ from sklearn.preprocessing import StandardScaler
 
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[1]  # repo root (script lives in scripts/)
 sys.path.insert(0, str(ROOT))
 from src.data_utils import load_experiment
 

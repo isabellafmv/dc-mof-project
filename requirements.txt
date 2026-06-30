@@ -1,0 +1,61 @@
+# =====================================================================
+# Requirements for the MOF CO2-adsorption project
+#
+# The pipeline uses TWO separate conda environments because the RACS
+# feature-generation step (mofdscribe / pymatgen) pins an older Python
+# than the modelling/analysis work. Create both:
+#
+#   # 1) core analysis + modelling (most notebooks)
+#   conda create -n mof_ml python=3.11
+#   conda activate mof_ml
+#   pip install -r requirements.txt            # installs Section A + C
+#
+#   # 2) RACS feature generation (notebook 02 only)
+#   conda create -n mofdscribe python=3.10
+#   conda activate mofdscribe
+#   pip install -r requirements.txt            # install Section B here
+#
+# Version pins are intentionally loose; pin exact versions from your
+# working environments (`pip freeze`) before final submission.
+# =====================================================================
+
+
+# ---------------------------------------------------------------------
+# SECTION A — Core analysis & modelling   (Python 3.11)
+# Used by notebooks 03-17 and scripts/run_hpo_geo_rac.py.
+# This is also the `mof_mlp` environment (the MLP work uses the same
+# packages, minus xgboost).
+# ---------------------------------------------------------------------
+numpy
+pandas
+scipy
+pyarrow
+scikit-learn
+xgboost
+optuna
+shap
+joblib
+matplotlib
+seaborn
+
+
+# ---------------------------------------------------------------------
+# SECTION B — RACS feature generation   (Python 3.10, `mofdscribe` env)
+# Used ONLY by notebook 02 (RACS descriptors). Install in a separate
+# Python 3.10 environment: mofdscribe/pymatgen are not compatible with
+# the 3.11 stack above.
+# ---------------------------------------------------------------------
+mofdscribe
+pymatgen
+pyarrow
+numpy
+pandas
+
+
+# ---------------------------------------------------------------------
+# SECTION C — Data acquisition   (Python 3.10+)
+# Used by notebook 01 to fetch the hMOF dataset from MOFDB.
+# Can be installed in the core environment.
+# ---------------------------------------------------------------------
+mofdb-client
+tqdm
