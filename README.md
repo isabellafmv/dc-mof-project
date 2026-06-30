@@ -89,28 +89,28 @@ The 7 feature sets (defined in `feature_selection.json`, loaded via `src/data_ut
 
 **Model training** (7 feature sets x 3 splits = 21 experiments per model)
 
-5. `notebooks/xgboost_training.ipynb` (Isabella) -> `models/xgb/`, `results/xgb/`
-6. `notebooks/random_forest_training.ipynb` (Alina) -> `models/rf/`, `results/rf/`
-7. `notebooks/mlp_co2.ipynb` (Hannah, fixed architecture) + `notebooks/run_hpo_geo_rac.py` (HPO)
+5. `notebooks/xgboost_training.ipynb` -> `models/xgb/`, `results/xgb/`
+6. `notebooks/random_forest_training.ipynb` -> `models/rf/`, `results/rf/`
+7. `notebooks/mlp_co2.ipynb` (fixed architecture) + `notebooks/run_hpo_geo_rac.py` (HPO)
    -> `models/mlp/`, `results/mlp/mlp_summary.csv`
 
 **SHAP interpretation** (18 non-baseline experiments per model)
 
-8.  `notebooks/xgboost_shap_analysis.ipynb` (Isabella) -> `results/xgb/shap/`
-9.  `notebooks/random_forest_shap_analysis.ipynb` (Alina) -> `results/rf/shap/`
-10. `notebooks/mlp_shap.ipynb` (Hannah) -> `results/mlp/shap/`
+8.  `notebooks/xgboost_shap_analysis.ipynb` -> `results/xgb/shap/`
+9.  `notebooks/random_forest_shap_analysis.ipynb` -> `results/rf/shap/`
+10. `notebooks/mlp_shap.ipynb` -> `results/mlp/shap/`
 
 **Outlier analysis** (MOFs mispredicted across the 9 conditions per model)
 
-11. `notebooks/prediction-outlier_analysis.ipynb` (Isabella)
-12. `notebooks/prediction_outlier_analysis_rf.ipynb` (Alina)
-13. `notebooks/prediction-outlier_analysis_mlp.ipynb` (Hannah)
+11. `notebooks/prediction-outlier_analysis.ipynb`
+12. `notebooks/prediction_outlier_analysis_rf.ipynb`
+13. `notebooks/prediction-outlier_analysis_mlp.ipynb`
     -> `results/prediction-outlier-analysis*/outlier_predictions_*.parquet` + plots
 
 **Cross-model comparison** (needs the three `outlier_predictions_*` parquets / SHAP caches)
 
-14. `notebooks/prediction-outlier_analysis_comparison.ipynb` (Hannah) -> `results/model-comparison-outliers/`
-15. `notebooks/shap_comparison_poster.ipynb` (Hannah) -> `results/model-comparison-outliers/poster/`
+14. `notebooks/prediction-outlier_analysis_comparison.ipynb` -> `results/model-comparison-outliers/`
+15. `notebooks/shap_comparison_poster.ipynb` -> `results/model-comparison-outliers/poster/`
 
 ## Shared loader
 
