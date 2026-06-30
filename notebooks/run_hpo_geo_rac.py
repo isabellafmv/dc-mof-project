@@ -63,7 +63,7 @@ HIDDEN_CONFIGS = [
 ]
 
 BASELINE_SETS = [('baseline', 2)]
-NON_BASELINE  = [
+NON_BASELINE = [
     ('geo_decorr', 5),
     ('geo_all', 6),
     ('rac_decorr', 45),
@@ -87,15 +87,15 @@ def make_pipe(mlp_kw):
 def eval_metrics(y_true, y_pred):
     return dict(
         test_RMSE=float(np.sqrt(mean_squared_error(y_true, y_pred))),
-        test_MAE =float(mean_absolute_error(y_true, y_pred)),
-        test_R2  =float(r2_score(y_true, y_pred)),
+        test_MAE=float(mean_absolute_error(y_true, y_pred)),
+        test_R2=float(r2_score(y_true, y_pred)),
     )
 
 
 # fixed-arch baseline
 
 def run_fixed(feat_set, n_feat, split):
-    tag        = f'{feat_set}__{split}'
+    tag = f'{feat_set}__{split}'
     model_path = MODELS_DIR / f'{tag}__fixed.joblib'
 
     if model_path.exists():
@@ -113,14 +113,14 @@ def run_fixed(feat_set, n_feat, split):
     kf = KFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
 
     # CV RMSE with fixed arch
-    scores  = cross_val_score(make_pipe(FIXED_MLP), X_tr, y_tr1, cv=kf,
+    scores = cross_val_score(make_pipe(FIXED_MLP), X_tr, y_tr1, cv=kf,
                                scoring='neg_mean_squared_error')
     cv_rmse = float(np.sqrt(-scores.mean()))
 
     # Refit on full train
     pipe = make_pipe(FIXED_MLP)
     pipe.fit(X_tr, y_tr1)
-    m      = eval_metrics(y_te1, pipe.predict(X_te))
+    m = eval_metrics(y_te1, pipe.predict(X_te))
     n_iter = pipe.named_steps['mlp'].n_iter_
 
     elapsed = (time.time() - t0) / 60
@@ -138,7 +138,7 @@ def run_fixed(feat_set, n_feat, split):
 # HPO
 
 def run_hpo(feat_set, n_feat, split):
-    tag        = f'{feat_set}__{split}'
+    tag = f'{feat_set}__{split}'
     model_path = MODELS_DIR / f'{tag}__optuna.joblib'
 
     if model_path.exists():
@@ -156,7 +156,7 @@ def run_hpo(feat_set, n_feat, split):
     kf = KFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
 
     def objective(trial):
-        idx  = trial.suggest_int('hidden_idx', 0, len(HIDDEN_CONFIGS) - 1)
+        idx = trial.suggest_int('hidden_idx', 0, len(HIDDEN_CONFIGS) - 1)
         pipe = make_pipe(dict(
             hidden_layer_sizes=HIDDEN_CONFIGS[idx],
             activation=trial.suggest_categorical('activation', ['relu', 'tanh']),
@@ -175,7 +175,7 @@ def run_hpo(feat_set, n_feat, split):
                                 sampler=optuna.samplers.TPESampler(seed=RANDOM_STATE))
     study.optimize(objective, n_trials=N_TRIALS, show_progress_bar=False)
 
-    bp     = study.best_params
+    bp = study.best_params
     hidden = HIDDEN_CONFIGS[bp['hidden_idx']]
     act, alph, lr, bs = bp['activation'], bp['alpha'], bp['lr'], bp['batch_size']
 
@@ -186,7 +186,7 @@ def run_hpo(feat_set, n_feat, split):
                    random_state=RANDOM_STATE)
     pipe = make_pipe(best_kw)
     pipe.fit(X_tr, y_tr1)
-    m      = eval_metrics(y_te1, pipe.predict(X_te))
+    m = eval_metrics(y_te1, pipe.predict(X_te))
     n_iter = pipe.named_steps['mlp'].n_iter_
     elapsed = (time.time() - t0) / 60
 
@@ -216,11 +216,11 @@ if __name__ == '__main__':
     # baseline uses fixed-arch only (HPO not meaningful with 2 features)
     # non-baseline uses HPO only (the canonical result for the final CSV)
     fixed_jobs = [(fs, n, sp) for fs, n in BASELINE_SETS for sp in SPLITS]
-    hpo_jobs   = [(fs, n, sp) for fs, n in NON_BASELINE  for sp in SPLITS]
+    hpo_jobs = [(fs, n, sp) for fs, n in NON_BASELINE  for sp in SPLITS]
 
     n_fixed_done = sum(1 for fs, n, sp in fixed_jobs
                        if (MODELS_DIR / f'{fs}__{sp}__fixed.joblib').exists())
-    n_hpo_done   = sum(1 for fs, n, sp in hpo_jobs
+    n_hpo_done = sum(1 for fs, n, sp in hpo_jobs
                        if (MODELS_DIR / f'{fs}__{sp}__optuna.joblib').exists())
 
     print(f'Fixed-arch  : {len(fixed_jobs)} baseline experiments  ({n_fixed_done} done, '
@@ -255,11 +255,11 @@ if __name__ == '__main__':
         print('\nAll experiments already done.')
 
     # build canonical CSV: one row per (feature_set, split)
-    # baseline → fixed arch;  all others → optuna (HPO)
+    # baseline => fixed arch;  all others => optuna (HPO)
     if SUMMARY_CSV.exists():
         df = pd.read_csv(SUMMARY_CSV)
-        baseline_rows  = df[(df.feature_set == 'baseline') & (df.method == 'fixed')]
-        optuna_rows    = df[(df.feature_set != 'baseline') & (df.method == 'optuna')]
+        baseline_rows = df[(df.feature_set == 'baseline') & (df.method == 'fixed')]
+        optuna_rows = df[(df.feature_set != 'baseline') & (df.method == 'optuna')]
         canonical = pd.concat([baseline_rows, optuna_rows], ignore_index=True)
 
         FEAT_ORDER = ['baseline', 'geo_decorr', 'geo_all',
